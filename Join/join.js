@@ -9,6 +9,10 @@ function findState(rl){
   return rl.question('Which state do you live in?\n');
 }
 
+function getInput(rl){
+  return rl.question('');
+}
+
 function printStates(state, rl){
 
   stateDatabase.update({
@@ -58,7 +62,15 @@ module.exports = {
     console.log('Awesome! ' + state + ' is a great place to call home!\nWhich of these cities do you live closest to?\n');
     getInfoAtCurrentReference(function(cities){
       console.log(cities);
+      var city = getInput(rl);
+      stateDatabase = stateDatabase.child(city);
+      getInfoAtCurrentReference(function(groups){
+        console.log("\nHere are some groups in your area!\nType one of their names to find out more info on them\n" + groups);
+        var group = getInput(rl);
+      })
     });
+
+
 
   }
 }
