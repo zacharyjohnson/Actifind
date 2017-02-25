@@ -1,6 +1,6 @@
 const readline = require('readline');
 var admin = require("firebase-admin");
-
+var stateDatabase;
 
 // Get a database reference to our blog
 var db = admin.database();
@@ -10,9 +10,7 @@ function findState(rl){
 }
 
 function printStates(state, rl){
-  var reference  = "states/" + state;
-  console.log(reference);
-  var stateDatabase = db.ref(reference);
+
   stateDatabase.update({
     "hello":"fool"
   });
@@ -34,20 +32,33 @@ function addStates(){
   }
 }
 
-function printState(rl){
-  ref.on("value", function(snapshot) {
-  console.log(snapshot.val());
-}, function (errorObject) {
-  console.log("The read failed: " + errorObject.code);
-});
+function getInfoAtCurrentReference(callback){
+  var cities = "";
+  var query = stateDatabase.orderByKey();
+  query.once("value")
+    .then(function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+        // key will be "ada" the first time and "alan" the second time
+
+        var key = childSnapshot.key;
+        cities += (key + "\n");
+    });
+    callback(cities);
+  });
+
 }
 
 module.exports = {
   joinGroup: function(rl){
 
     var state = findState(rl);
+    var reference  = "states/" + state;
+    console.log(reference);
+    stateDatabase = db.ref(reference);
     console.log('Awesome! ' + state + ' is a great place to call home!\nWhich of these cities do you live closest to?\n');
-    printStates(state, rl);
+    getInfoAtCurrentReference(function(cities){
+      console.log(cities);
+    });
 
   }
 }

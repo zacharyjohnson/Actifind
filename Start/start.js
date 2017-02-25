@@ -18,7 +18,6 @@ switch (task) {
 
     const join = require('../Join/join');
     join.joinGroup(readlineSync);
-    console.log('1');
 
     break;
   case "Create":
