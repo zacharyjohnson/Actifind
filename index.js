@@ -11,4 +11,4 @@ admin.initializeApp({
   }),
   databaseURL: "https://actifind-6e67d.firebaseio.com"
 });
-require('./start/index');
+require('./server');
