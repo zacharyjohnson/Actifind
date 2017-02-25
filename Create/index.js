@@ -1,7 +1,7 @@
 
 
-var f = function(){
+var join = function(){
   console.log("sup mf'er");
 }
 
-module.exports.f = f 
+module.exports.joinGroup = join

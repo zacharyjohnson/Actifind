@@ -1,6 +1,5 @@
 // content of index.js
-require('./start/index')
-var admin = require("firebase-admin");
+
 
 var admin = require("firebase-admin");
 
@@ -12,3 +11,4 @@ admin.initializeApp({
   }),
   databaseURL: "https://actifind-6e67d.firebaseio.com"
 });
+require('./start/index');

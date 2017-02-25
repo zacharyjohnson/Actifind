@@ -1,41 +1,40 @@
 // start/start.js
 
-const readline = require('readline');
+const readlineSync = require('readline-sync');
 // Import Admin SDK
-var admin = require("firebase-admin");
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
 
-var cities = ['Indianapolis','Fort Wayne','Evansville','South Bend','Carmel','Bloogmington','Hammond','Gary','Lafayette','Columbus'];
-rl.question('Welcome to Communifind! For help, respond with \'help\'', (response) => {
-  switch (response) {
-    case "Join":
 
-      const join = require("../Create/index.js");
-      join.f();
+var task = readlineSync.question('Welcome to Communifind! For help, respond with \'help\', otherwise type your command\n');
 
-      break;
-    case "Create":
 
-      break;
-    case "Help":
-      help();
-      break;
-    case "Update":
-      break;
-    case "Message":
-      break;
-    default:
-      console.log("Oops! Looks like that's not a valid command :/");
-      help();
-  }
 
-  rl.close();
-});
 
-var help = function (){
-  console.log("Possible commands include:\nJoin - Search for and join local community groups\nCreate - Add your group to the list for others to find\nUpdate - Update your group's description\nMessage - Send a message to all users associated with your group");
+
+
+
+switch (task) {
+  case "Join":
+
+    console.log('1');
+
+    break;
+  case "Create":
+    console.log('2');
+    break;
+  case "Help":
+    help();
+    break;
+  case "Update":
+    console.log('3');
+    break;
+  case "Message":
+    break;
+  default:
+    console.log("Oops! Looks like that's not a valid command :/");
+    help();
+}
+
+function help (){
+  console.log("Possible commands include:\nJoin - Search for and join local community groups\nCreate - Add your group to the list for others to find\nUpdate - Update your group's description\nMessage - Send a message to all users associated with your group\n");
 }
