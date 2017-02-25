@@ -16,6 +16,8 @@ var task = readlineSync.question('Welcome to Communifind! For help, respond with
 switch (task) {
   case "Join":
 
+    const join = require('../Join/join');
+    join.joinGroup(readlineSync);
     console.log('1');
 
     break;
