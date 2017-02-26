@@ -19,7 +19,7 @@ A texting service to help people find local community groups, and local communit
 ## OTHER SOURCES OF DOCUMENTATION
 
 ## Contributor Guide
-[LINK TO CONTRIBUTING.md]
+https://github.com/zacharyjohnson/GroupFind/blob/master/CONTRIBUTING.md
 
 ## License 
 MIT License
