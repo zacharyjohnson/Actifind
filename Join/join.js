@@ -53,7 +53,43 @@ function getInfoAtCurrentReference(callback){
 }
 
 module.exports = {
-  joinGroup: function(rl){
+
+  /*
+    For when a city has been received through the text
+  */
+  gotCity: function(){
+
+  }
+
+  /*
+    For when more information on a club is being sought
+  */
+  gotClub: function(){
+
+  }
+
+  /*
+    For when a confirmation to the club has been received
+  */
+  gotConfirmation: function(){
+
+  }
+
+  /*
+    For when a person wants to creat a group
+  */
+  gotCreateGroup: function(){
+
+  }
+
+  /*
+    For when a request to send a notification is received
+  */
+  gotSendNotification: function(){
+
+  }
+
+  gotState: function(rl){
 
     var state = findState(rl);
     var reference  = "states/" + state;
