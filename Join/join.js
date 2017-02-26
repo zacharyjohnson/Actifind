@@ -10,6 +10,14 @@ var clubs = {
   "stART: Arts for Learning":"Raise awareness for Arts for Learning."
 }
 
+var name1;
+var description1;
+var website1;
+
+var ohio = {
+
+}
+
 admin.database.enableLogging(true);
 var db = admin.database();
 
@@ -66,8 +74,23 @@ function getInfoAtCurrentReference(callback){
 
 }
 
+function printCinci(){
+  ohio[name1] = description1;
+  ohio["website"] = website1;
+  return name1 + ": " + description1 + " Website: " + website1;
+}
+
 module.exports = {
 
+  gotUpdate: function(callback){
+    callback("Hi, Women of Cinci! What would you like to update your message to?");
+  },
+
+  updateDescription: function(group, message, callback){
+
+    description1 = message;
+    callback("Okay, all set! This is how you'll appear to others now: \n" + printCinci());
+  },
   /*
     For when a city has been received through the text
   */
@@ -116,8 +139,23 @@ module.exports = {
   /*
     For when a person wants to creat a group
   */
-  gotCreateGroup: function(){
+  gotCreateGroup: function(callback){
+    callback("So you have a group? We'd love to help you find new members. To get started, what is the name of your group?");
+  },
 
+  gotGroupName: function(name, callback){
+    name1 = name;
+    callback("Okay, " + name + ", how would you describe your organization?");
+  },
+
+  gotGroupDescription: function(description, callback){
+    description1 = description;
+    callback("Okay! One last thing: what's your website?");
+  },
+
+  gotGroupWebsite: function(website, callback){
+    website1 = website;
+    callback("Cool! This is how your organization will appear for others:\n" + printCinci());
   },
 
   /*

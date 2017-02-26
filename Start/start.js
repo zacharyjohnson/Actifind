@@ -9,6 +9,9 @@ var hasJoin = false;            // Track if a Join message has been received
 var hasState = false;           // Track if a state has been received
 var hasCity = false;            // Track if a city has been received
 var hasNotify = false;
+var hasUpdate = false;
+var hasCreate = false;
+var createNumber = 1;
 var hasClub = false;            // Track if a specific club has been received
 
 var states = ['alabama','alaska','american samoa','arizona','arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Federated States of Micronesia','Florida','Georgia','Guam','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Marshall Islands','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Northern Mariana Islands','Ohio','Oklahoma','Oregon','Palau','Pennsylvania','Puerto Rico','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virgin Island','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
@@ -36,6 +39,8 @@ function setAllToFalse(){
   hasCity = false;
   hasClub = false;
   hasNotify = false;
+  hasUpdate = false;
+  hasCreate = false;
 }
 
 function handleMessage(message, server){
@@ -53,12 +58,25 @@ function handleMessage(message, server){
 
       break;
     case "create":
+      var message1 = null;
+      hasCreate = true;
+      join.gotCreateGroup(function(reply){
+        message1 = reply;
+      });
 
+      return message1;
       break;
     case "help":
       return help();
       break;
     case "update":
+      var message1 = null;
+      setAllToFalse();
+      hasUpdate = true;
+      join.gotUpdate(function(reply){
+        message1 = reply;
+      });
+      return message1;
       break;
     case "notify":
       setAllToFalse();
@@ -73,11 +91,8 @@ function handleMessage(message, server){
       return message1;
       break;
     default:
-    console.log("Maybe?");
       if(hasJoin){
-        console.log("Hello");
         if (hasClub){
-          console.log("1");
         } else if (hasCity){
           if (lowerCase == "yes"){
             return "Okay, cool! We've added you to the text list for the club, so you'll receive a text when the club sends them."
@@ -133,6 +148,33 @@ function handleMessage(message, server){
 
         }
         return message1;
+      } else if (hasUpdate){
+        var group = "Women of Cinci";
+        var message1 = null;
+        join.updateDescription(group, message, function(reply){
+          message1 = reply;
+        });
+        return message1;
+      } else if(hasCreate) {
+        var message2 = null;
+          if(createNumber == 1){
+            createNumber++;
+            join.gotGroupName(message, function(reply){
+              message2 = reply;
+            })
+          } else if (createNumber == 2){
+            createNumber++;
+            join.gotGroupDescription(message, function(reply){
+              message2 = reply;
+            })
+          } else if (createNumber == 3){
+            createNumber++;
+            join.gotGroupWebsite(message, function(reply){
+              message2 = reply;
+            })
+          }
+
+          return message2;
       } else {
         return ("Oops! Looks like that's not a valid command :/\n") + help();
 
