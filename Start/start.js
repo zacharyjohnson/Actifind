@@ -13,6 +13,7 @@ var hasUpdate = false;
 var hasCreate = false;
 var createNumber = 1;
 var hasClub = false;            // Track if a specific club has been received
+var hasCreateReady = false;
 
 var states = ['alabama','alaska','american samoa','arizona','arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Federated States of Micronesia','Florida','Georgia','Guam','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Marshall Islands','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Northern Mariana Islands','Ohio','Oklahoma','Oregon','Palau','Pennsylvania','Puerto Rico','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virgin Island','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
 const join = require('../Join/join');
@@ -41,12 +42,13 @@ function setAllToFalse(){
   hasNotify = false;
   hasUpdate = false;
   hasCreate = false;
+  hasCreateReady = false;
+  createNumber  = 0;
 }
 
 function handleMessage(message, server){
 
   var lowerCase = message.toLowerCase();
-  console.log(message);
   switch (lowerCase) {
     case "join":
 
@@ -58,12 +60,15 @@ function handleMessage(message, server){
 
       break;
     case "create":
+
+      setAllToFalse();
       var message1 = null;
       hasCreate = true;
+      createNumber = 0;
       join.gotCreateGroup(function(reply){
         message1 = reply;
       });
-
+      hasState = false;
       return message1;
       break;
     case "help":
@@ -91,9 +96,9 @@ function handleMessage(message, server){
       return message1;
       break;
     default:
-      if(hasJoin){
+      if((hasJoin || hasCreate) && !hasCreateReady && createNumber == 0){
         if (hasClub){
-        } else if (hasCity){
+        } else if (hasCity && !hasCreate){
           if (lowerCase == "yes"){
             return "Okay, cool! We've added you to the text list for the club, so you'll receive a text when the club sends them."
           } else if (lowerCase == "no"){
@@ -110,18 +115,29 @@ function handleMessage(message, server){
 
             return message1;
           }
-        } else if (hasState){
+        } else if (hasState && !hasCreateReady){
           var message2 = null;
           join.gotCity(message, function(reply){
             hasCity = true;
-            message2 = message + ", a great city! Here are some local groups:\n" + reply + "Reply with the name of a group for more information";
+            if (!hasJoin){
+              hasCreateReady = true;
+              createNumber = 1;
+            }
+
+            if (hasCreate){
+              message2 = message + ", a great city! What is the name of your group?";
+            } else {
+              message2 = message + ", a great city! Here are some local groups:\n" + reply;
+              if (reply != "It looks like there aren't any groups yet! Be the first") {
+                message2 += "Reply with the name of a group for more information";
+              }
+            }
           });
           return message2;
-        } else {
-          console.log("We're in the right general area");
+        } else if (!hasCreateReady){
+          console.log("Got here");
           if (isState(lowerCase)){
             var message2 = null;
-            console.log("it's a state, my boy");
             join.gotState(message, function(reply){
               hasState = true;
 
@@ -155,7 +171,8 @@ function handleMessage(message, server){
           message1 = reply;
         });
         return message1;
-      } else if(hasCreate) {
+      } else if (hasCreateReady) {
+        console.log("got to hasCreateReady");
         var message2 = null;
           if(createNumber == 1){
             createNumber++;

@@ -13,6 +13,7 @@ var clubs = {
 var name1;
 var description1;
 var website1;
+var madeGroup = false;
 
 var ohio = {
 
@@ -99,7 +100,13 @@ module.exports = {
     getInfoAtCurrentReference(function(message1){
       callback(message1);
     });
-    callback("Indy Democrats\nIndy Feminists\nIndy Nerdfighters\nUnited Way's Emerging Leaders\nstART: Arts for Learning\n");
+    if (message == "Indianapolis"){
+      callback("Indy Democrats\nIndy Feminists\nIndy Nerdfighters\nUnited Way's Emerging Leaders\nstART: Arts for Learning\n");
+    } else if (!madeGroup){
+      callback("It looks like there aren't any groups yet! Be the first");
+    } else {
+      callback("Women of Cinci\n");
+    }
   },
 
   /*
@@ -122,6 +129,10 @@ module.exports = {
       case "stART: Arts for Learning":
         callback("stART: " + clubs[message] + "\nWebsite: https://artsforlearningindiana.org/about/start-young-professionals-board/\n");
         break;
+      case "Women of Cinci":
+        callback(printCinci() + "\n");
+        break;
+
       default:
         callback("Oops! Make sure you're spelling the names exactly");
         break;
@@ -140,7 +151,8 @@ module.exports = {
     For when a person wants to creat a group
   */
   gotCreateGroup: function(callback){
-    callback("So you have a group? We'd love to help you find new members. To get started, what is the name of your group?");
+    madeGroup = true;
+    callback("So you have a group? We'd love to help you find new members. To get started, what state are you in?");
   },
 
   gotGroupName: function(name, callback){
@@ -175,7 +187,11 @@ module.exports = {
       console.log("we're in the reference");
         callback(message1);
     });
-    callback("Indianapolis\nFort Wayne\nLafayette\nBloomington\nEvansville");
+    if (message == "Indiana"){
+      callback("Indianapolis\nFort Wayne\nLafayette\nBloomington\nEvansville");
+    } else {
+      callback("Columbus\nCleveland\nCincinnati\nDayton\nToledo");
+    }
   },
 
   gotNotificationMessage: function(message, server, callback){
