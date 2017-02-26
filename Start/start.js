@@ -38,7 +38,7 @@ function setAllToFalse(){
   hasNotify = false;
 }
 
-function handleMessage(message){
+function handleMessage(message, server){
 
   var lowerCase = message.toLowerCase();
   console.log(message);
@@ -111,6 +111,8 @@ function handleMessage(message){
               hasState = true;
 
                message2 = "Which of these cities are you closest to?\n" + reply;
+            }, function(){
+              2+2;
             });
 
             while(message2 == null){
@@ -122,9 +124,15 @@ function handleMessage(message){
           }
         }
       } else if(hasNotify){
-        join.gotNotificationMessage(message, function(reply){
-          
+        var message1 = null;
+        join.gotNotificationMessage(message, server, function(reply){
+          message1 = reply;
         })
+
+        while(message1 == null){
+
+        }
+        return message1;
       } else {
         return ("Oops! Looks like that's not a valid command :/\n") + help();
 

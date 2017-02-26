@@ -2,7 +2,13 @@ const readline = require('readline');
 var admin = require("firebase-admin");
 var stateDatabase;
 
-
+var clubs = {
+  "Indy Democrats":"The Democratic club of Marion County",
+  "Indy Feminists":"Indiana's Feminist Collective.",
+  "Indy Nerdfighters":"Your local source for all things Nerdfighters.",
+  "United Way's Emergin Leaders":"Supporters of the United Way's many initiatives.",
+  "stART: Arts for Learning":"Raise awareness for Arts for Learning."
+}
 
 admin.database.enableLogging(true);
 var db = admin.database();
@@ -79,19 +85,19 @@ module.exports = {
   gotClub: function(message, callback){
     switch (message) {
       case "Indy Democrats":
-        callback("Indy Democrats: The Democratic club of Marion County\nWebsite: http://www.indydemocrats.com/\n");
+        callback("Indy Democrats: " + clubs[message] + "\nWebsite: http://www.indydemocrats.com/\n");
         break;
       case "Indy Feminists":
-        callback("Indy Feminists: Indiana's Feminist Collective.\nWebsite: https://indyfeminists.wordpress.com/\n");
+        callback("Indy Feminists: " + clubs[message] + "\nWebsite: https://indyfeminists.wordpress.com/\n");
         break;
       case "Indy Nerdfighters":
-        callback("Indy Nerdfighters: Your local source for all things Nerdfighters.\nWebsite: https://www.facebook.com/groups/293991550778046");
+        callback("Indy Nerdfighters: " + clubs[message] + ".\nWebsite: https://www.facebook.com/groups/293991550778046");
         break;
       case "United Way's Emerging Leaders":
-        callback("Emerging Leaders: Supporters of the United Way's many initiatives.\nWebsite: http://www.uwci.org/emerging-leaders\n");
+        callback("Emerging Leaders: " + clubs[message] + "\nWebsite: http://www.uwci.org/emerging-leaders\n");
         break;
       case "stART: Arts for Learning":
-        callback("stART: Raise awareness for Arts for Learning.\nWebsite: https://artsforlearningindiana.org/about/start-young-professionals-board/\n");
+        callback("stART: " + clubs[message] + "\nWebsite: https://artsforlearningindiana.org/about/start-young-professionals-board/\n");
         break;
       default:
         callback("Oops! Make sure you're spelling the names exactly");
@@ -134,8 +140,9 @@ module.exports = {
     callback("Indianapolis\nFort Wayne\nLafayette\nBloomington\nEvansville");
   },
 
-  gotNotificationMessage: function(message, callback){
-    
+  gotNotificationMessage: function(message, server, callback){
+    server.sendMessage(message);
+    callback("Awesome! Your message has been sent.");
   },
 
   gotJoin: function(){
