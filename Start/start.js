@@ -8,6 +8,7 @@ var hasInitialCommand = false;  // Track if an initial command has been received
 var hasJoin = false;            // Track if a Join message has been received
 var hasState = false;           // Track if a state has been received
 var hasCity = false;            // Track if a city has been received
+var hasNotify = false;
 var hasClub = false;            // Track if a specific club has been received
 
 var states = ['alabama','alaska','american samoa','arizona','arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Federated States of Micronesia','Florida','Georgia','Guam','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Marshall Islands','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Northern Mariana Islands','Ohio','Oklahoma','Oregon','Palau','Pennsylvania','Puerto Rico','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virgin Island','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
@@ -34,6 +35,7 @@ function setAllToFalse(){
   hasState = false;
   hasCity = false;
   hasClub = false;
+  hasNotify = false;
 }
 
 function handleMessage(message){
@@ -59,6 +61,16 @@ function handleMessage(message){
     case "update":
       break;
     case "notify":
+      setAllToFalse();
+      var message1 = null;
+      hasNotify = true;
+      join.gotSendNotification(function(reply){
+        message1 = reply;
+      });
+      while (message1 == null){
+
+      }
+      return message1;
       break;
     default:
     console.log("Maybe?");
@@ -67,9 +79,29 @@ function handleMessage(message){
         if (hasClub){
           console.log("1");
         } else if (hasCity){
-          console.log("2");
+          if (lowerCase == "yes"){
+            return "Okay, cool! We've added you to the text list for the club, so you'll receive a text when the club sends them."
+          } else if (lowerCase == "no"){
+            return "Okay! Reply with another name if you're interested in another club."
+          } else {
+            var message1 = null;
+            join.gotClub(message, function(reply){
+              message1 = reply + "Do you want to join this club? (yes/no)\n"
+            })
+
+            while (message1 == null){
+
+            }
+
+            return message1;
+          }
         } else if (hasState){
-          console.log("3");
+          var message2 = null;
+          join.gotCity(message, function(reply){
+            hasCity = true;
+            message2 = message + ", a great city! Here are some local groups:\n" + reply + "Reply with the name of a group for more information";
+          });
+          return message2;
         } else {
           console.log("We're in the right general area");
           if (isState(lowerCase)){
@@ -89,6 +121,10 @@ function handleMessage(message){
             return ("Please make sure you've spelled your state's name correctly");
           }
         }
+      } else if(hasNotify){
+        join.gotNotificationMessage(message, function(reply){
+          
+        })
       } else {
         return ("Oops! Looks like that's not a valid command :/\n") + help();
 

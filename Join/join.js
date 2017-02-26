@@ -65,15 +65,39 @@ module.exports = {
   /*
     For when a city has been received through the text
   */
-  gotCity: function(){
-
+  gotCity: function(message, callback){
+    stateDatabase.child(message);
+    getInfoAtCurrentReference(function(message1){
+      callback(message1);
+    });
+    callback("Indy Democrats\nIndy Feminists\nIndy Nerdfighters\nUnited Way's Emerging Leaders\nstART: Arts for Learning\n");
   },
 
   /*
     For when more information on a club is being sought
   */
-  gotClub: function(){
+  gotClub: function(message, callback){
+    switch (message) {
+      case "Indy Democrats":
+        callback("Indy Democrats: The Democratic club of Marion County\nWebsite: http://www.indydemocrats.com/\n");
+        break;
+      case "Indy Feminists":
+        callback("Indy Feminists: Indiana's Feminist Collective.\nWebsite: https://indyfeminists.wordpress.com/\n");
+        break;
+      case "Indy Nerdfighters":
+        callback("Indy Nerdfighters: Your local source for all things Nerdfighters.\nWebsite: https://www.facebook.com/groups/293991550778046");
+        break;
+      case "United Way's Emerging Leaders":
+        callback("Emerging Leaders: Supporters of the United Way's many initiatives.\nWebsite: http://www.uwci.org/emerging-leaders\n");
+        break;
+      case "stART: Arts for Learning":
+        callback("stART: Raise awareness for Arts for Learning.\nWebsite: https://artsforlearningindiana.org/about/start-young-professionals-board/\n");
+        break;
+      default:
+        callback("Oops! Make sure you're spelling the names exactly");
+        break;
 
+    }
   },
 
   /*
@@ -93,8 +117,8 @@ module.exports = {
   /*
     For when a request to send a notification is received
   */
-  gotSendNotification: function(){
-
+  gotSendNotification: function(callback){
+    callback("Hi, Women of Cinci! What would you like your message to say?");
   },
 
   gotState: function(message, callback){
@@ -102,12 +126,16 @@ module.exports = {
 
 
     console.log(reference);
-    stateDatabase = db.ref(reference);
+    stateDatabase = db.ref().child("states").child(message);
     getInfoAtCurrentReference(function(message1){
       console.log("we're in the reference");
-        callback("Indianapolis\nFort Wayne\nLafayette\nBloomington\nEvansville");
+        callback(message1);
     });
+    callback("Indianapolis\nFort Wayne\nLafayette\nBloomington\nEvansville");
+  },
 
+  gotNotificationMessage: function(message, callback){
+    
   },
 
   gotJoin: function(){
